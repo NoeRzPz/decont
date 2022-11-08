@@ -16,3 +16,11 @@
 #   CCAGGATTTACAGACTTTAAA
 #
 #   If $4 == "another" only the **first two sequence** should be output
+
+#Variables definition
+wd=~/decont
+sample_url=$1
+sample_dir=$2
+
+echo "Downloading sample $(basename $sample_url .fastq.gz)..."
+wget -c -P $sample_dir $sample_url
