@@ -21,6 +21,12 @@
 wd=~/decont
 sample_url=$1
 sample_dir=$2
+uncompress=$3
 
-echo "Downloading sample $(basename $sample_url .fastq.gz)..."
+echo "Downloading $(basename $sample_url .fastq.gz)..."
 wget -c -P $sample_dir $sample_url
+if [ "$uncompress" == "yes" ]
+then
+	echo "Uncompressing database..."
+	gunzip $sample_dir/$(basename $sample_url)
+fi
