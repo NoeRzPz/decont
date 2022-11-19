@@ -26,17 +26,68 @@ do
     echo
 done
 
-# run cutadapt for all merged files and STAR for all trimmed files
-# create a single log file containing information from cutadapt and star logs
-echo "Starting sample decontamination..."
-echo
+echo "Running cutadapt..."
 for fname in out/merged/*.fastq.gz
 do
     sid=$(basename $fname .fastq.gz)
-    echo "Decontaminating sample $sid..."
-    bash scripts/decontaminate_sample.sh $sid
-    echo "Done"
-    echo 
+    echo "Trimming sample $sid..."
+    mkdir -p out/trimmed
+    mkdir -p log/cutadapt
+    cutadapt \
+        -m 18 \
+        -a TGGAATTCTCGGGTGCCAAGG \
+        --discard-untrimmed \
+        -o out/trimmed/${sid}.trimmed.fastq.gz out/merged/${sid}.fastq.gz \
+        > log/cutadapt/${sid}.log
+    if [ "$?" -ne 0 ] # Control structure for previous exit code
+    then
+        echo "Error in trimming sequences."
+        exit 1
+    fi
 done
+echo "Done"
+echo
+
+echo "Running STAR alignment..."
+echo
+for fname in out/trimmed/*.fastq.gz
+do
+    sid=$(basename $fname .trimmed.fastq.gz)
+    echo "Decontaminating sample $sid..."
+    mkdir -p out/star/${sid}
+    STAR \
+        --runThreadN 4 \
+        --genomeDir res/contaminants_idx \
+        --outReadsUnmapped Fastx  \
+        --readFilesIn out/trimmed/${sid}.trimmed.fastq.gz \
+        --readFilesCommand gunzip -c  \
+        --outFileNamePrefix out/star/${sid}/
+    if [ "$?" -ne 0 ] # Control structure for previous exit code
+    then
+        echo "Error in aligning sequences."
+        exit 1
+    fi
+done
+echo "Done"
+echo
+
+# create a single log file containing information from cutadapt and star logs
+echo "Generating Log.out..."
+for fname in log/cutadapt/*.log
+do
+    sid=$(basename $fname .log)
+    echo "${sid}" >> Log.out
+    cat log/cutadapt/${sid}.log | egrep "Reads with |Total basepairs" >> Log.out
+    cat out/star/${sid}/Log.final.out | \
+    egrep "reads %|% of reads mapped to (multiple|too)" >> Log.out
+    if [ "$?" -ne 0 ] # Control structure for previous exit code
+    then
+        echo "Error in generating log file."
+        exit 1
+    fi
+    echo >> Log.out
+done
+echo "Done"
+echo
 
 echo "-------- Pipeline finished at $(date +'%d %h %y, %r')... --------"
