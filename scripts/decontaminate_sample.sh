@@ -1,4 +1,9 @@
-#Variable definition
+if [ "$#" -ne 1 ] #Check if number of positional arguments after bash script is not equal to 1
+then
+    echo "Usage: $0 <sampleid>"
+    exit 1
+fi
+
 sampleid=$1
 
 echo "Running cutadapt..."
