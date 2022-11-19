@@ -4,16 +4,30 @@ echo "-------- Starting pipeline at $(date +'%d %h %y, %r')... --------"
 for url in $(cat data/urls)
 do
     bash scripts/download.sh $url data
+    if [ "$?" -ne 0 ]
+    then
+        exit 1
+    fi
 done
 
 # Download the contaminants fasta file, uncompress it, and
 # filter to remove all small nuclear RNAs
 bash scripts/download.sh https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz res yes "small nuclear"
+if [ "$?" -ne 0 ]
+then
+    echo "Error in processing database."
+    exit 1
+fi
 echo
 
 # Index the contaminants file
 echo "Running STAR index..."
 bash scripts/index.sh res/contaminants.fasta res/contaminants_idx
+if [ "$?" -ne 0 ]
+then
+    echo "Error in indexing database."
+    exit 1
+fi
 echo "Done"
 echo
 
@@ -22,6 +36,10 @@ for sid in $(ls data/*fastq.gz | xargs basename -a | cut -d"-" -f1 | sort -u)
 do
     echo "Merging sample $sid files..."
     bash scripts/merge_fastqs.sh data out/merged $sid
+    if [ "$?" -ne 0 ]
+    then
+        exit 1
+    fi
     echo "Done"
     echo
 done
@@ -39,12 +57,16 @@ do
         --discard-untrimmed \
         -o out/trimmed/${sid}.trimmed.fastq.gz out/merged/${sid}.fastq.gz \
         > log/cutadapt/${sid}.log
-    if [ "$?" -ne 0 ] # Control structure for previous exit code
+    if [ "$?" -ne 0 ]
     then
-        echo "Error in trimming sequences."
-        exit 1
+        fail=1
     fi
 done
+if [ "$fail" -eq 1 ]
+then
+    echo "Error in running cutadapt"
+    exit 1
+fi
 echo "Done"
 echo
 
@@ -62,12 +84,16 @@ do
         --readFilesIn out/trimmed/${sid}.trimmed.fastq.gz \
         --readFilesCommand gunzip -c  \
         --outFileNamePrefix out/star/${sid}/
-    if [ "$?" -ne 0 ] # Control structure for previous exit code
+    if [ "$?" -ne 0 ]
     then
-        echo "Error in aligning sequences."
-        exit 1
+        mistake=1
     fi
-done
+done 
+if [ "$mistake" -eq 1 ]
+then
+    echo "Error in running STAR"
+    exit 1
+fi
 echo "Done"
 echo
 
@@ -80,10 +106,10 @@ do
     cat log/cutadapt/${sid}.log | egrep "Reads with |Total basepairs" >> Log.out
     cat out/star/${sid}/Log.final.out | \
     egrep "reads %|% of reads mapped to (multiple|too)" >> Log.out
-    if [ "$?" -ne 0 ] # Control structure for previous exit code
+    if [ "$?" -ne 0 ]
     then
-        echo "Error in generating log file."
-        exit 1
+        echo "Error in creating Log.out"
+	exit 1
     fi
     echo >> Log.out
 done

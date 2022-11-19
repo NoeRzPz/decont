@@ -10,4 +10,3 @@ then
     echo "Error in merging files."
     exit 1
 fi
-

@@ -8,9 +8,4 @@ STAR \
     --genomeDir $outdir \
     --genomeFastaFiles $genomefile \
     --genomeSAindexNbases 9
-if [ "$?" -ne 0 ] # Control structure for previous exit code
-then
-    echo "Error in indexing database."
-    exit 1
-fi
 
