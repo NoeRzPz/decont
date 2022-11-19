@@ -27,4 +27,5 @@ echo "Creating log file..."
 echo "${sampleid}" >> Log.out
 cat log/cutadapt/${sampleid}.log | egrep "Reads with |Total basepairs" >> Log.out
 cat out/star/${sampleid}/Log.final.out | egrep "reads %|% of reads mapped to (multiple|too)"  >> Log.out
+echo >> Log.out
 echo

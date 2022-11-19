@@ -14,6 +14,7 @@ echo
 # Index the contaminants file
 echo "Running STAR index..."
 bash scripts/index.sh res/contaminants.fasta res/contaminants_idx
+echo "Done"
 echo
 
 # Merge the samples into a single file
