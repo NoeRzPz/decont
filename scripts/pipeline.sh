@@ -9,6 +9,7 @@ done
 # Download the contaminants fasta file, uncompress it, and
 # filter to remove all small nuclear RNAs
 bash scripts/download.sh https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz res yes "small nuclear"
+echo
 
 # Index the contaminants file
 echo "Running STAR index..."

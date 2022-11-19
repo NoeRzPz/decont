@@ -11,13 +11,13 @@ then
     echo "Error in downloading file."
     exit 1 
 fi
-echo "Done"
 echo
 
 if [ "$uncompress" == "yes" ]
 then
     echo "Uncompressing $(basename $file_url .fasta.gz) database..."
     gunzip -k $out_dir/$(basename $file_url)
+    echo "Done"
 fi
 echo
 
