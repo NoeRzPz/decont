@@ -1,0 +1,10 @@
+name: decont
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - cutadapt
+  - star
+  - seqkit
+prefix: /home/vant/mambaforge/envs/decont
