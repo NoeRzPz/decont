@@ -22,14 +22,16 @@ do
     echo
 done
 
-
-for fname in out/trimmed/*.fastq.gz
+# run cutadapt for all merged files and STAR for all trimmed files
+# create a single log file containing information from cutadapt and star logs
+echo "Starting sample decontamination..."
+echo
+for fname in out/merged/*.fastq.gz
 do
-    bash scripts/decontaminate_sample.sh # TODO: run cutadapt for all merged files # TODO: run STAR for all trimmed files
+    sid=$(basename $fname .fastq.gz)
+    echo "Decontaminating sample $sid..."
+    bash scripts/decontaminate_sample.sh $sid
+    echo "Done"
+    echo 
 done 
 
-# TODO: create a log file containing information from cutadapt and star logs
-# (this should be a single log file, and information should be *appended* to it on each run)
-# - cutadapt: Reads with adapters and total basepairs
-# - star: Percentages of uniquely mapped reads, reads mapped to multiple loci, and to too many loci
-# tip: use grep to filter the lines you're interested in
