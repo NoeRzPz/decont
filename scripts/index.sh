@@ -1,6 +1,3 @@
-# This script indexes the genome file specified in the first argument ($1),
-# creating the index in a directory specified by the second argument ($2).
-
 #Variables definition
 genomefile=$1
 outdir=$2
