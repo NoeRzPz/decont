@@ -18,6 +18,11 @@ if [ "$uncompress" == "yes" ]
 then
     echo "Uncompressing $(basename $file_url .fasta.gz) database..."
     gunzip -k $out_dir/$(basename $file_url)
+    if [ "$?" -ne 0 ]
+    then
+        echo "Error in uncompressing file."
+        exit 1
+    fi
     echo "Done"
 fi
 echo
@@ -27,5 +32,10 @@ then
     echo "Filtering $(basename $file_url .fasta.gz) database..."
     seqkit grep -v -r -p "small nuclear" -n $out_dir/$gunzipfile \
     > tmp && mv tmp $out_dir/$gunzipfile
+    if [ "$?" -ne 0 ]
+    then
+        echo "Error in fitering file."
+        exit 1
+    fi
     echo "Done"
 fi
