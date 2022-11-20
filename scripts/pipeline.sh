@@ -55,14 +55,14 @@ do
         -m 18 \
         -a TGGAATTCTCGGGTGCCAAGG \
         --discard-untrimmed \
-        -o out/trimmed/${sid}.trimmed.fastq.gz out/merged/${sid}.fastq.gz \
+        -o out/trimmed/${sid}.trimmed.fastq.gz out/merged/${#sid}.fastq.gz \
         > log/cutadapt/${sid}.log
     if [ "$?" -ne 0 ]
     then
         fail=1
     fi
 done
-if [ "$fail" -eq 1 ]
+if [ -n "$fail" ]
 then
     echo "Error in running cutadapt"
     exit 1
@@ -89,7 +89,7 @@ do
         mistake=1
     fi
 done 
-if [ "$mistake" -eq 1 ]
+if [ -n "$mistake" ]
 then
     echo "Error in running STAR"
     exit 1
