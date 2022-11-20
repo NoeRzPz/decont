@@ -13,7 +13,7 @@ then
         echo "File $file_url already downloaded"
         exit 0
     fi
-    wget -c -P $out_dir -i $file_url
+    wget -P $out_dir -i $file_url
 else
     echo "Downloading $(basename $file_url) file..."
     if [ -e $out_dir/$(basename $file_url) ] # Check output existence
@@ -21,7 +21,7 @@ else
         echo "File $(basename $file_url) already downloaded"
         exit 0
     fi
-    wget -c -P $out_dir $file_url
+    wget -P $out_dir $file_url
 fi
 echo
 
