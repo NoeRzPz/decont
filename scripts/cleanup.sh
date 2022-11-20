@@ -1,5 +1,5 @@
 # Script that removes created files
-#It takes zero or more of the arguments: "data", "resources", "output", "logs"
+#It takes zero or more of the arguments: "data" "resources" "output" "logs"
 
 if [ "$#" -eq 0 ] # If no arguments are passed, it deletes every file
 then
