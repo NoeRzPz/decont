@@ -5,10 +5,7 @@ set -e
 trap 'echo Error at about $LINENO' ERR
 
 #Download all the files specified in data/filenames
-for url in $(cat data/urls)
-do
-    bash scripts/download.sh $url data
-done
+bash scripts/download.sh data/urls data
 
 # Download the contaminants fasta file, uncompress it, and
 # filter to remove all small nuclear RNAs
