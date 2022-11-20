@@ -3,18 +3,18 @@
 
 if [ "$#" -eq 0 ] # If no arguments are passed, it deletes every file
 then
-	find data ~/decont -maxdepth 1 -type f ! \( -name urls -o -name .gitkeep -o -name .gitignore -o -name README.md \) -print
-	find log out res -mindepth 1 ! -name .gitkeep -print
-	echo "Everything has been deleted"
+    find data ~/decont -maxdepth 1 -type f ! \( -name urls -o -name .gitkeep -o -name .gitignore -o -name README.md \) -print
+    find log out res -mindepth 1 ! -name .gitkeep -print
+    echo "Everything has been deleted"
 else
-	# It stores all positional arguments (as separate strings) in a variable
-	args=$@
+    args=$@ # Otherwise, it stores all positional arguments in a variable
 fi
 
+# In every iteration matchs the case and deletes the corresponding files
 for arg in $args
 do
-	case $arg in # Use case statement to make decision
-	"data") 
+    case $arg in # Use case statement to make decision
+        "data") 
 		find $arg -maxdepth 1 -type f ! \( -name urls -o -name .gitkeep \) -print
 		echo "All $arg files deleted"
 		;;
