@@ -4,12 +4,26 @@ echo "-------- Starting pipeline at $(date +'%d %h %y, %r')... --------"
 set -e
 trap 'echo Error at about $LINENO' ERR
 
+#Variable definition
+db=https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz
+
 #Download all the files specified in data/filenames
 bash scripts/download.sh data/urls data
 
+echo "Checking md5sum..."
+for url in $(cat data/urls)
+do
+    md5sum -c <(echo $(curl ${url}.md5 | grep s_sRNA. | cut -d" " -f1) data/$(basename $url))
+done
+echo
+
 # Download the contaminants fasta file, uncompress it, and
 # filter to remove all small nuclear RNAs
-bash scripts/download.sh https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz res yes "small nuclear"
+bash scripts/download.sh $db res yes "small nuclear"
+echo
+
+echo "Checking $(basename $db) md5sum..."
+md5sum -c <(echo $(curl ${db}.md5 | grep fasta.gz | cut -d" " -f1) res/$(basename $db))
 echo
 
 # Index the contaminants file
