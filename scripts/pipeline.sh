@@ -31,6 +31,11 @@ echo "Running cutadapt..."
 for fname in out/merged/*.fastq.gz
 do
     sid=$(basename $fname .fastq.gz)
+    if [ -e out/trimmed/${sid}.trimmed.fastq.gz ] # Check output already exists
+    then
+	echo "$sid already trimmed"
+	continue	
+    fi
     echo "Trimming sample $sid..."
     mkdir -p out/trimmed
     mkdir -p log/cutadapt
@@ -49,6 +54,11 @@ echo
 for fname in out/trimmed/*.fastq.gz
 do
     sid=$(basename $fname .trimmed.fastq.gz)
+    if [ -e out/star/$sid/ ] # Check output already exists
+    then
+        echo "$sid already aligned"
+        continue	
+    fi
     echo "Decontaminating sample $sid..."
     mkdir -p out/star/${sid}
     STAR \
@@ -64,6 +74,13 @@ echo
 
 # create a single log file containing information from cutadapt and star logs
 echo "Generating Log.out..."
+
+if [ -e Log.out ] # Check output already exists
+then
+    echo "Log file already exists"
+    exit 0
+fi
+
 for fname in log/cutadapt/*.log
 do
     sid=$(basename $fname .log)

@@ -3,13 +3,24 @@ file_url=$1
 out_dir=$2
 uncompress=$3
 filter=$4
+datafiles=($out_dir/*.fastq.gz) # Store files as an array
 
 if [ -f "$file_url" ] # Check if first argument is a file
 then
     echo "Downloading sequencing data files..."
+    if [[ -e ${datafiles[0]} && -e ${datafiles[3]} ]] # Check output existence
+    then
+        echo "File $file_url already downloaded"
+        exit 0
+    fi
     wget -c -P $out_dir -i $file_url
 else
     echo "Downloading $(basename $file_url) file..."
+    if [ -e $out_dir/$(basename $file_url) ] # Check output existence
+    then
+        echo "File $(basename $file_url) already downloaded"
+        exit 0
+    fi
     wget -c -P $out_dir $file_url
 fi
 echo
