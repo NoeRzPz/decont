@@ -36,18 +36,6 @@ else
 fi
 echo
 
-#echo "Downloading $(basename $file_url) file..."
-#if [ -e $out_dir/$(basename $file_url) ] # Check output existence
-#then
-#    echo "File $(basename $file_url) already downloaded"
-#    exit 0
-#fi
-#wget -P $out_dir $file_url
-
-#echo "Checking $(basename $file_url) md5sum..."
-#md5sum -c <(echo $(curl ${file_url}.md5 | grep fasta.gz | cut -d" " -f1) $out_dir/$(basename $file_url))
-#echo
-
 if [ "$uncompress" == "yes" ] # Uncompress file only if third argument is yes
 then
     echo "Uncompressing $(basename $file_url .fasta.gz) database..."
