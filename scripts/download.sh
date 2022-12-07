@@ -1,4 +1,4 @@
-#Variables definition
+# Variables definition
 file_url=$1
 out_dir=$2
 uncompress=$3
@@ -11,7 +11,7 @@ then
     if [[ -e ${datafiles[0]} && -e ${datafiles[3]} ]] # Check output existence
     then
         echo "File $file_url already downloaded"
-        exit 0
+	exit 0
     fi
     wget -P $out_dir -i $file_url
     echo
@@ -42,10 +42,10 @@ else
         echo "md5sum checked failed" && exit 1
     fi
 fi
-echo
 
 if [ "$uncompress" == "yes" ] # Uncompress file only if third argument is yes
 then
+    echo
     echo "Uncompressing $(basename $file_url .fasta.gz) database..."
     gunzip -k $out_dir/$(basename $file_url)
     echo "Done"

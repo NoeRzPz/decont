@@ -1,14 +1,15 @@
 echo "-------- Starting pipeline at $(date +'%d %h %y, %r')... --------"
+echo
 
-#Stop execution when having a non-zero status and trap errors giving line number
+# Stop execution when having a non-zero status and trap errors giving line number
 set -e
 trap 'echo Error at about $LINENO' ERR
 
-#Download all the files specified in data/filenames
+# Download all the files specified in data/filenames
 bash scripts/download.sh data/urls data
+echo
 
-# Download the contaminants fasta file, uncompress it, and
-# filter to remove all small nuclear RNAs
+# Download the contaminants fasta file, uncompress it, and filter to remove all small nuclear RNAs
 bash scripts/download.sh https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz res yes "small nuclear"
 echo
 
@@ -46,7 +47,6 @@ do
         -o out/trimmed/${sid}.trimmed.fastq.gz out/merged/${sid}.fastq.gz \
         > log/cutadapt/${sid}.log
 done
-echo "Done"
 echo
 
 echo "Running STAR alignment..."
@@ -72,7 +72,7 @@ done
 echo "Done"
 echo
 
-# create a single log file containing information from cutadapt and star logs
+# Create a single log file containing information from cutadapt and star logs
 echo "Generating Log.out..."
 
 if [ -e Log.out ] # Check output already exists
