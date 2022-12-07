@@ -19,7 +19,7 @@ then
     echo "Checking md5sum..."
     for url in $(cat $file_url)
     do
-        md5sum -c <(echo $(curl ${url}.md5 | grep s_sRNA. | cut -d" " -f1) $out_dir/$(basename $url))
+        md5sum -c <(echo $(curl ${url}.md5 | grep s_sRNA. | cut -d" " -f1) $out_dir/$(basename $url)) || echo "md5sum checked failed" && exit 1 # Exits if md5sum is not ok
     done
 else
     echo "Downloading $(basename $file_url) file..."
@@ -32,7 +32,7 @@ else
     echo
 
     echo "Checking $(basename $file_url) md5sum..."
-    md5sum -c <(echo $(curl ${file_url}.md5 | grep fasta.gz | cut -d" " -f1) $out_dir/$(basename $file_url))
+    md5sum -c <(echo $(curl ${file_url}.md5 | grep fasta.gz | cut -d" " -f1) $out_dir/$(basename $file_url)) || echo "md5sum checked failed" && exit 1 # Exits if md5sum is not ok
 fi
 echo
 
