@@ -1,5 +1,5 @@
 # Script that removes created files
-#It takes zero or more of the arguments: "data" "resources" "output" "logs"
+# It takes zero or more of the arguments: "data" "resources" "output" "logs"
 
 if [ "$#" -eq 0 ] # If no arguments are passed, it deletes every file
 then
@@ -10,7 +10,7 @@ else
     args=$@ # Otherwise, it stores all positional arguments in a variable
 fi
 
-# In every iteration matchs the case and deletes the corresponding files
+# In every iteration matchs the case and deletes the corresponding files, keeping the specified ones
 for arg in $args
 do
     case $arg in # Use case statement to make decision

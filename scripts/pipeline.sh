@@ -47,6 +47,7 @@ do
         -o out/trimmed/${sid}.trimmed.fastq.gz out/merged/${sid}.fastq.gz \
         > log/cutadapt/${sid}.log
 done
+echo "Done"
 echo
 
 echo "Running STAR alignment..."

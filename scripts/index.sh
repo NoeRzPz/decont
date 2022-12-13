@@ -1,4 +1,4 @@
-#Variables definition
+# Variables definition
 genomefile=$1
 outdir=$2
 
