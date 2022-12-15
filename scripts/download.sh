@@ -12,7 +12,7 @@ then
         echo "Files in $file_url already downloaded"
 	exit 0
     fi
-    wget -P $out_dir -i $file_url
+    wget -c -P $out_dir -i $file_url # Option continue to avoid duplicate files
     echo
 
     echo "Checking md5sum..."
