@@ -9,7 +9,7 @@ trap 'echo Error at about $LINENO' ERR
 bash scripts/download.sh data/urls data
 echo
 
-# Download the contaminants fasta file, uncompress it, and filter to remove all small nuclear RNAs
+# Download the contaminants fasta file, uncompress it and filter to remove all small nuclear RNAs
 bash scripts/download.sh https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz res yes "small nuclear"
 echo
 
@@ -37,6 +37,7 @@ do
 	echo "$sid already trimmed"
 	continue	
     fi
+
     echo "Trimming sample $sid..."
     mkdir -p out/trimmed
     mkdir -p log/cutadapt
@@ -51,7 +52,6 @@ echo "Done"
 echo
 
 echo "Running STAR alignment..."
-echo
 for fname in out/trimmed/*.fastq.gz
 do
     sid=$(basename $fname .trimmed.fastq.gz)
@@ -60,6 +60,8 @@ do
         echo "$sid already aligned"
         continue	
     fi
+
+    echo
     echo "Decontaminating sample $sid..."
     mkdir -p out/star/${sid}
     STAR \
@@ -85,10 +87,10 @@ fi
 for fname in log/cutadapt/*.log
 do
     sid=$(basename $fname .log)
+
     echo "${sid}" >> Log.out
     cat log/cutadapt/${sid}.log | egrep "Reads with |Total basepairs" >> Log.out
-    cat out/star/${sid}/Log.final.out | \
-    egrep "reads %|% of reads mapped to (multiple|too)" >> Log.out
+    cat out/star/${sid}/Log.final.out | egrep "reads %|% of reads mapped to (multiple|too)" >> Log.out
     echo >> Log.out
 done
 echo "Done"
