@@ -64,7 +64,7 @@ echo
 if [ "$filter" == "small nuclear" ] # Filter only if fourth argument is small nuclear
 then
     echo "Filtering $(db_name) database..."
-    seqkit grep -vrp "small nuclear" -n $out_dir/$(db_name) \
+    seqkit grep -vir -p "small nuclear" -p "snRNA" -n $out_dir/$(db_name) \
     > tmp && mv tmp $out_dir/$(db_name) # Save it with same file name
     echo "Done"
 fi
