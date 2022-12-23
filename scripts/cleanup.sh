@@ -10,7 +10,7 @@ else
     args=$@ # Otherwise, it stores all positional arguments in a variable
 fi
 
-# In every iteration matchs the case and deletes the corresponding files, keeping the specified ones
+# In every iteration matchs the case and deletes the corresponding files (keeps the hidden ones)
 for arg in $args
 do
     case $arg in # Use case statement to make decision
